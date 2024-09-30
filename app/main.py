@@ -110,5 +110,5 @@ uvicorn.run(
     host="0.0.0.0",
     port=8000,
     proxy_headers=True,
-    forwarded_allow_ips=["172.18.0.7"]
+    forwarded_allow_ips="172.18.0.7"
 )
