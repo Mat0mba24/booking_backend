@@ -30,7 +30,6 @@ async def lifespan(_: FastAPI):
         encoding="utf8",
         decode_responses=True,
     )
-    await redis.set("key", "value")
     FastAPICache.init(RedisBackend(redis), prefix="cache")
     yield
 
@@ -70,20 +69,20 @@ for router in [
 app.include_router(prefix_router)
 
 # Подключение CORS, чтобы запросы к API могли приходить из браузера
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://127.0.0.1:3000"
-    ],
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS", "DELETE", "PATCH", "PUT"],
-    allow_headers=[
-        "Content-Type", "Set-Cookie", "Access-Control-Allow-Headers",
-        "Access-Control-Allow-Origin",
-        "Authorization"
-    ],
-)
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=[
+#         "http://localhost:3000",
+#         "http://127.0.0.1:3000"
+#     ],
+#     allow_credentials=True,
+#     allow_methods=["GET", "POST", "OPTIONS", "DELETE", "PATCH", "PUT"],
+#     allow_headers=[
+#         "Content-Type", "Set-Cookie", "Access-Control-Allow-Headers",
+#         "Access-Control-Allow-Origin",
+#         "Authorization"
+#     ],
+# )
 
 # Подключение админки
 admin = Admin(app, engine, authentication_backend=authentication_backend)
