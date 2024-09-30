@@ -16,5 +16,4 @@ async def get_rooms_by_time(
         date_to: date = Query(..., description=f"Например, {(datetime.now() + timedelta(days=14)).date()}"),
 ) -> List[SRoomInfo]:
     rooms = await RoomDAO.find_all(hotel_id, date_from, date_to)
-    print(rooms)
     return rooms
