@@ -7,5 +7,3 @@ COPY requirements.txt .
 RUN pip install -r /booking_project/requirements.txt
 
 COPY . .
-
-RUN chmod a+x /booking_project/scripts/celery.sh
