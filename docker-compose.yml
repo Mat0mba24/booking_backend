@@ -39,49 +39,49 @@ services:
     env_file:
       - ".env"
 
-  celery_service:
-    image: "celery_image"
-    build:
-      context: .
-      dockerfile: celery.Dockerfile
-    container_name: "celery_container"
-    volumes:
-      - .:/booking_project
-    command: ["/booking_project/scripts/celery.sh", "celery"]
-    env_file:
-      - ".env"
-    depends_on:
-      - redis_service
-
-  celery_beat_service:
-    image: "celery_beat_image"
-    build:
-      context: .
-      dockerfile: celery.Dockerfile
-    container_name: "celery_beat_container"
-    volumes:
-      - .:/booking_project
-    command: [ "/booking_project/scripts/celery.sh", "celery_beat" ]
-    env_file:
-      - ".env"
-    depends_on:
-      - redis_service
-
-  flower_service:
-    image: "flower_image"
-    build:
-      context: .
-      dockerfile: celery.Dockerfile
-    container_name: "flower_container"
-    volumes:
-      - .:/booking_project
-    command: ["/booking_project/scripts/celery.sh", "flower"]
-    env_file:
-      - ".env"
-    ports:
-      - "5555:5555"
-    depends_on:
-      - redis_service
+#  celery_service:
+#    image: "celery_image"
+#    build:
+#      context: .
+#      dockerfile: celery.Dockerfile
+#    container_name: "celery_container"
+#    volumes:
+#      - .:/booking_project
+#    command: ["/booking_project/scripts/celery.sh", "celery"]
+#    env_file:
+#      - ".env"
+#    depends_on:
+#      - redis_service
+#
+#  celery_beat_service:
+#    image: "celery_beat_image"
+#    build:
+#      context: .
+#      dockerfile: celery.Dockerfile
+#    container_name: "celery_beat_container"
+#    volumes:
+#      - .:/booking_project
+#    command: [ "/booking_project/scripts/celery.sh", "celery_beat" ]
+#    env_file:
+#      - ".env"
+#    depends_on:
+#      - redis_service
+#
+#  flower_service:
+#    image: "flower_image"
+#    build:
+#      context: .
+#      dockerfile: celery.Dockerfile
+#    container_name: "flower_container"
+#    volumes:
+#      - .:/booking_project
+#    command: ["/booking_project/scripts/celery.sh", "flower"]
+#    env_file:
+#      - ".env"
+#    ports:
+#      - "5555:5555"
+#    depends_on:
+#      - redis_service
 
 volumes:
   pgdata:
