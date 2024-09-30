@@ -15,7 +15,6 @@ from app.importer.router import router as router_import
 from app.logger import logger
 from app.users.router import router_auth, router_users
 from fastapi import FastAPI, Request, APIRouter
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend

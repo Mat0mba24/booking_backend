@@ -1,8 +1,8 @@
 import smtplib
-from app.logger import logger
-from app.config import settings
 
 from app.bookings.dao import BookingDAO
+from app.config import settings
+from app.logger import logger
 from app.tasks.email_templates import create_booking_reminder_template
 
 
@@ -14,7 +14,6 @@ async def remind_of_booking(days: int):
     msgs = []
     for booking in bookings:
         email_to = booking.user.email
-        email_to = settings.SMTP_USER
         booking_data = {
             "date_to": booking.date_to,
             "date_from": booking.date_from,
