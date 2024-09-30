@@ -26,10 +26,11 @@ from sqladmin import Admin
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     redis = aioredis.from_url(
-        f"redis://:{settings.REDIS_PASSWORD}@{settings.REDIS_HOST}:{settings.REDIS_PORT}/{settings.REDIS_DB}",
+        url=f"redis://:{settings.REDIS_PASSWORD}@{settings.REDIS_HOST}:{settings.REDIS_PORT}/{settings.REDIS_DB}",
         encoding="utf8",
         decode_responses=True,
     )
+    await redis.set("key", "value")
     FastAPICache.init(RedisBackend(redis), prefix="cache")
     yield
 
