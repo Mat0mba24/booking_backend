@@ -26,7 +26,7 @@ from sqladmin import Admin
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     redis = aioredis.from_url(
-        f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}",
+        f"redis://:{settings.REDIS_PASSWORD}@{settings.REDIS_HOST}:{settings.REDIS_PORT}/{settings.REDIS_DB}",
         encoding="utf8",
         decode_responses=True,
     )
@@ -110,5 +110,5 @@ uvicorn.run(
     host="0.0.0.0",
     port=8000,
     proxy_headers=True,
-    forwarded_allow_ips="172.18.0.0/16"
+    forwarded_allow_ips="*"
 )
