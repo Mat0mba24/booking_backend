@@ -1,13 +1,14 @@
 from datetime import date, datetime, timedelta
 from typing import List
 
-from fastapi import Query
-
 from app.hotels.rooms.dao import RoomDAO
 from app.hotels.rooms.schemas import SRoomInfo
 from app.hotels.router import router
+from fastapi import Query
+from fastapi_cache.decorator import cache
 
 
+@cache(expire=30)
 @router.get("/{hotel_id}/rooms")
 async def get_rooms_by_time(
         hotel_id: int,

@@ -67,6 +67,7 @@ for router in [
 
 app.include_router(prefix_router)
 
+# Судя по всему в CORS нет смысла, когда идет проксирование запросов через nginx
 # Подключение CORS, чтобы запросы к API могли приходить из браузера
 # app.add_middleware(
 #     CORSMiddleware,

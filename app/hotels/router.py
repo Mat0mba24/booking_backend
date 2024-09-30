@@ -1,16 +1,16 @@
 from datetime import date, datetime, timedelta
 from typing import List, Optional
 
-from fastapi import APIRouter, Query
-
 from app.exceptions import CannotBookHotelForLongPeriod, DateFromCannotBeAfterDateTo
 from app.hotels.dao import HotelDAO
 from app.hotels.schemas import SHotel, SHotelInfo
+from fastapi import APIRouter, Query
+from fastapi_cache.decorator import cache
 
 router = APIRouter(prefix="/hotels", tags=["Отели"])
 
 
-# @cache(expire=30)
+@cache(expire=30)
 @router.get("/{location}")
 async def get_hotels_by_location_and_time(
         location: str,
@@ -26,6 +26,7 @@ async def get_hotels_by_location_and_time(
     return hotels
 
 
+@cache(expire=30)
 @router.get("/id/{hotel_id}", include_in_schema=True)
 # Этот эндпоинт используется для фронтенда, когда мы хотим отобразить все
 # номера в отеле и информацию о самом отеле. Этот эндпоинт как раз отвечает за информацию

@@ -1,12 +1,12 @@
-from fastapi import APIRouter, BackgroundTasks, Depends
-from pydantic import TypeAdapter
-
 from app.bookings.dao import BookingDAO
 from app.bookings.schemas import SBookingInfo, SNewBooking
 from app.exceptions import RoomCannotBeBooked
 from app.tasks.tasks import send_booking_confirmation_email
 from app.users.dependencies import get_current_user
 from app.users.models import Users
+from fastapi import APIRouter, Depends
+from fastapi_cache.decorator import cache
+from pydantic import TypeAdapter
 
 router = APIRouter(
     prefix="/bookings",
@@ -14,6 +14,7 @@ router = APIRouter(
 )
 
 
+@cache(expire=30)
 @router.get("")
 async def get_bookings(user: Users = Depends(get_current_user)) -> list[SBookingInfo]:
     return await BookingDAO.find_all_with_images(user_id=user.id)
@@ -22,7 +23,7 @@ async def get_bookings(user: Users = Depends(get_current_user)) -> list[SBooking
 @router.post("", status_code=201)
 async def add_booking(
         booking: SNewBooking,
-        background_tasks: BackgroundTasks,
+        # background_tasks: BackgroundTasks,
         user: Users = Depends(get_current_user),
 ):
     booking = await BookingDAO.add(
