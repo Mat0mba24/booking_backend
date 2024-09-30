@@ -1,0 +1,88 @@
+version: "3.8"
+services:
+  booking_service:
+    image: "booking_image"
+    build:
+      context: .
+      dockerfile: booking.Dockerfile
+    container_name: "booking_container"
+    volumes:
+      - .:/booking_project
+    env_file:
+      - ".env"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    ports:
+      - "3779:8000"
+    depends_on:
+      - pg_service
+      - redis_service
+
+  pg_service:
+    image: postgres:15-alpine
+    container_name: "pg_container"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    command: "postgres -c max_connections=150 -c shared_buffers=512MB -c effective_cache_size=1536MB -c maintenance_work_mem=128MB -c checkpoint_completion_target=0.9 -c wal_buffers=16MB -c default_statistics_target=100 -c random_page_cost=1.1 -c effective_io_concurrency=200 -c work_mem=3495kB -c min_wal_size=1GB -c max_wal_size=4GB -c max_worker_processes=2 -c max_parallel_workers_per_gather=1 -c max_parallel_workers=2 -c max_parallel_maintenance_workers=1"
+    env_file:
+      - ".env"
+
+  redis_service:
+    image: redis:6.2-alpine
+    container_name: "redis_container"
+    volumes:
+      - cache:/data
+    command: "redis-server --port $REDIS_PORT --save 20 1 --loglevel warning --requirepass $REDIS_PASSWORD"
+    env_file:
+      - ".env"
+
+  celery_service:
+    image: "celery_image"
+    build:
+      context: .
+      dockerfile: celery.Dockerfile
+    container_name: "celery_container"
+    volumes:
+      - .:/booking_project
+    command: ["/booking_project/scripts/celery.sh", "celery"]
+    env_file:
+      - ".env"
+    depends_on:
+      - redis_service
+
+  celery_beat_service:
+    image: "celery_beat_image"
+    build:
+      context: .
+      dockerfile: celery.Dockerfile
+    container_name: "celery_beat_container"
+    volumes:
+      - .:/booking_project
+    command: [ "/booking_project/scripts/celery.sh", "celery_beat" ]
+    env_file:
+      - ".env"
+    depends_on:
+      - redis_service
+
+  flower_service:
+    image: "flower_image"
+    build:
+      context: .
+      dockerfile: celery.Dockerfile
+    container_name: "flower_container"
+    volumes:
+      - .:/booking_project
+    command: ["/booking_project/scripts/celery.sh", "flower"]
+    env_file:
+      - ".env"
+    ports:
+      - "5555:5555"
+    depends_on:
+      - redis_service
+
+volumes:
+  pgdata:
+  cache:

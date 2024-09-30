@@ -1,0 +1,15 @@
+.dockerignore
+celery.Dockerfile
+booking.Dockerfile
+docker-compose.yml
+README.md
+
+.git
+__pycache__
+venv
+.env
+.env-example
+
+.gitignore
+.vscode
+.idea
