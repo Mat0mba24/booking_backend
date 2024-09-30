@@ -25,7 +25,7 @@ celery.conf.beat_schedule = {
     },
     "luboe-nazvanie": {
         "task": "periodic_task",
-        "schedule": 5,  # секунды
-        # "schedule": crontab(minute="30", hour="15"),
+        "schedule": 60 * 5,  # секунды
+        # "schedule": crontab(hour="15", minute="30"),
     }
 }
