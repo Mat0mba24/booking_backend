@@ -7,7 +7,6 @@ README.md
 .git
 __pycache__
 venv
-.env
 .env-example
 
 .gitignore
