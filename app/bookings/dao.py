@@ -6,7 +6,7 @@ from sqlalchemy.orm import joinedload
 
 from app.bookings.models import Bookings
 from app.dao.base import BaseDAO
-from app.database import async_session_maker, async_session_maker_nullpool
+from app.database import session_pool, async_session_maker_nullpool
 from app.exceptions import RoomFullyBooked
 from app.hotels.rooms.models import Rooms
 from app.logger import logger
@@ -17,7 +17,7 @@ class BookingDAO(BaseDAO):
 
     @classmethod
     async def find_all_with_images(cls, user_id: int):
-        async with async_session_maker() as session:
+        async with session_pool() as session:
             query = (
                 select(
                     # __table__.columns нужен для отсутствия вложенности в ответе Алхимии
@@ -51,7 +51,7 @@ class BookingDAO(BaseDAO):
         GROUP BY rooms.quantity, booked_rooms.room_id
         """
         try:
-            async with async_session_maker() as session:
+            async with session_pool() as session:
                 booked_rooms = (
                     select(Bookings)
                     .where(

@@ -8,7 +8,7 @@ from sqlalchemy import insert
 
 from app.bookings.models import Bookings
 from app.config import settings
-from app.database import Base, async_session_maker, engine
+from app.database import Base, session_pool, engine
 from app.hotels.models import Hotels
 from app.hotels.rooms.models import Rooms
 from app.main import app as fastapi_app
@@ -40,7 +40,7 @@ async def prepare_database():
         booking["date_from"] = datetime.strptime(booking["date_from"], "%Y-%m-%d")
         booking["date_to"] = datetime.strptime(booking["date_to"], "%Y-%m-%d")
 
-    async with async_session_maker() as session:
+    async with session_pool() as session:
         for Model, values in [
             (Hotels, hotels),
             (Rooms, rooms),
@@ -65,14 +65,14 @@ def event_loop(request):
 
 @pytest.fixture(scope="function")
 async def ac():
-    "Асинхронный клиент для тестирования эндпоинтов"
+    """Асинхронный клиент для тестирования эндпоинтов"""
     async with AsyncClient(app=fastapi_app, base_url="http://test") as ac:
         yield ac
 
 
 @pytest.fixture(scope="session")
 async def authenticated_ac():
-    "Асинхронный аутентифицированный клиент для тестирования эндпоинтов"
+    """Асинхронный аутентифицированный клиент для тестирования эндпоинтов"""
     async with AsyncClient(app=fastapi_app, base_url="http://test") as ac:
         await ac.post("/api/auth/login", json={
             "email": "test@test.com",
@@ -80,10 +80,3 @@ async def authenticated_ac():
         })
         assert ac.cookies["booking_access_token"]
         yield ac
-
-
-# Фикстура оказалась бесполезной
-# @pytest.fixture(scope="function")
-# async def session():
-#     async with async_session_maker() as session:
-#         yield session

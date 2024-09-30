@@ -4,7 +4,7 @@ from sqlalchemy import and_, func, or_, select
 
 from app.bookings.models import Bookings
 from app.dao.base import BaseDAO
-from app.database import async_session_maker
+from app.database import session_pool
 from app.hotels.rooms.models import Rooms
 
 
@@ -57,7 +57,7 @@ class RoomDAO(BaseDAO):
                 Rooms.hotel_id == hotel_id
             )
         )
-        async with async_session_maker() as session:
+        async with session_pool() as session:
             # logger.debug(get_rooms.compile(engine, compile_kwargs={"literal_binds": True}))
             rooms = await session.execute(get_rooms)
             return rooms.mappings().all()
