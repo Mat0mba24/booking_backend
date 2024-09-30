@@ -10,7 +10,7 @@ from fastapi_cache.decorator import cache
 router = APIRouter(prefix="/hotels", tags=["Отели"])
 
 
-@cache(expire=30)
+# @cache(expire=30)
 @router.get("/{location}")
 async def get_hotels_by_location_and_time(
         location: str,
