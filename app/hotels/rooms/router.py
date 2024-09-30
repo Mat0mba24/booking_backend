@@ -8,8 +8,8 @@ from fastapi import Query
 from fastapi_cache.decorator import cache
 
 
-@cache(expire=30)
 @router.get("/{hotel_id}/rooms")
+@cache(expire=30)
 async def get_rooms_by_time(
         hotel_id: int,
         date_from: date = Query(..., description=f"Например, {datetime.now().date()}"),
