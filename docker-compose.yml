@@ -27,6 +27,7 @@ services:
     container_name: "pg_container"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    restart: always
     command: "postgres -c max_connections=150 -c shared_buffers=512MB -c effective_cache_size=1536MB -c maintenance_work_mem=128MB -c checkpoint_completion_target=0.9 -c wal_buffers=16MB -c default_statistics_target=100 -c random_page_cost=1.1 -c effective_io_concurrency=200 -c work_mem=3495kB -c min_wal_size=1GB -c max_wal_size=4GB -c max_worker_processes=2 -c max_parallel_workers_per_gather=1 -c max_parallel_workers=2 -c max_parallel_maintenance_workers=1"
     env_file:
       - ".env"
@@ -36,6 +37,7 @@ services:
     container_name: "redis_container"
     volumes:
       - cache:/data
+    restart: always
     command: "redis-server --port $REDIS_PORT --save 20 1 --loglevel warning --requirepass $REDIS_PASSWORD"
     env_file:
       - ".env"
@@ -48,6 +50,7 @@ services:
     container_name: "celery_container"
     volumes:
       - .:/booking_project
+    restart: always
     command: sh -c "celery --app=app.tasks.celery:celery worker -l INFO"
     env_file:
       - ".env"
@@ -62,6 +65,7 @@ services:
     container_name: "celery_beat_container"
     volumes:
       - .:/booking_project
+    restart: always
     command: sh -c "celery --app=app.tasks.celery:celery worker -l INFO -B"
     env_file:
       - ".env"
@@ -76,6 +80,7 @@ services:
     container_name: "flower_container"
     volumes:
       - .:/booking_project
+    restart: always
     command: sh -c "celery --app=app.tasks.celery:celery flower --url_prefix=/flower"
     env_file:
       - ".env"
